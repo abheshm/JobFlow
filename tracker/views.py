@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
-from rest_framework import import status
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
