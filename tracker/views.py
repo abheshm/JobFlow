@@ -58,3 +58,12 @@ class JobApplicationDetail(APIView):
         job.delete()
         return Response({'message': 'Deleted successfully '})
 
+
+
+
+
+
+
+def job_list_view(request):
+    jobs = JobApplication.objects.all()
+    return render(request, 'job_list.html', {'jobs':jobs})
