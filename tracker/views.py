@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import JobApplication
 from .serializers import JobApplicationSerializer
 from rest_framework import status
@@ -65,5 +65,22 @@ class JobApplicationDetail(APIView):
 
 
 def job_list_view(request):
+    if request.method=='POST':
+        company_name = request.POST.get('company_name')
+        job_role = request.POST.get('job_role')
+        application_date = request.POST.get('application_date')
+        status = request.POST.get('status')
+        notes = request.POST.get('notes')
+
+        JobApplication.objects.create(
+            company_name=company_name,
+            job_role=job_role,
+            application_date=application_date,
+            status=status,
+            notes=notes
+        )
+
+        return redirect('/')
+
     jobs = JobApplication.objects.all()
     return render(request, 'job_list.html', {'jobs':jobs})

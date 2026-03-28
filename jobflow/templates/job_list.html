@@ -7,6 +7,33 @@
 
     <h1>Job Applications</h1>
 
+    <h2>Add New Job</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="company_name" placeholder="Company Name" required><br><br>
+
+        <input type="text" name="job_role" placeholder="Job Role" required><br><br>
+
+        <input type="date" name="application_date" required><br><br>
+
+        <select name="status">
+            <option value="Applied">Applied</option>
+            <option value="Interview">Interview</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Offer">Offer</option>
+        </select><br><br>
+
+        <textarea name="notes" placeholder="Notes"></textarea><br><br>
+
+        <button type="submit">Add Job</button>
+    </form>
+
+    <hr>
+
+    <h2>All Applications</h2>
+
     <table border="1">
         <thead>
             <tr>
