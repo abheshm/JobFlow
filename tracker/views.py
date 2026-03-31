@@ -4,6 +4,7 @@ from .serializers import JobApplicationSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 class JobApplicationList(APIView):
@@ -80,7 +81,12 @@ def job_list_view(request):
             notes=notes
         )
 
-        return redirect('/')
+        return redirect('job_list')
 
     jobs = JobApplication.objects.all()
     return render(request, 'job_list.html', {'jobs':jobs})
+
+def delete_job(request,pk):
+    jobs = get_object_or_404(JobApplication, pk=pk)
+    jobs.delete()
+    return redirect('job_list')

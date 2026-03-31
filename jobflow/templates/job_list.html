@@ -42,6 +42,7 @@
                 <th>Company</th>
                 <th>Role</th>
                 <th>Status</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -50,6 +51,9 @@
                 <td>{{ job.company_name }}</td>
                 <td>{{ job.job_role }}</td>
                 <td>{{ job.status }}</td>
+                <td>
+                    <a href="{% url 'delete_job' job.id %}">Delete</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
