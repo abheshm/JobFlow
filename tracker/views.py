@@ -90,3 +90,17 @@ def delete_job(request,pk):
     jobs = get_object_or_404(JobApplication, pk=pk)
     jobs.delete()
     return redirect('job_list')
+
+def edit_job(request, pk):
+    job = get_object_or_404(JobApplication, pk=pk)
+
+    if request.method =='POST':
+        job.company_name = request.POST.get('company_name')
+        job.job_role = request.POST.get('job_role')
+        job.application_date = request.POST.get('application_date')
+        job.status = request.POST.get('status')
+        job.notes = request.POST.get('notes')
+        job.save()
+        return redirect('job_list')
+    
+    return render(request, 'edit_job.html', {"job":job})

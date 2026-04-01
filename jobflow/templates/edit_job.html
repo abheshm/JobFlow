@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Job</title>
+</head>
+<body>
+
+<h2>Edit Job</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="company_name" value="{{ job.name_name }}"><br><br>
+    <input type="text" name="job_role" value="{{ job.job_role }}"><br><br>
+    <input type="date" name="application_date" value="{{ job.application_date }}"><br><br>
+
+    <select name="status">
+        <option value="Applied">Applied</option>
+        <option value="Interview">Interview</option>
+        <option value="Rejected">Rejected</option>
+        <option value="Offer">Offer</option>
+    </select>
+
+    <textarea name="notes">{{ job.notes }}</textarea><br><br>
+
+    <button type="submit">Update</button>
+</form>
+
+
+</body>
+</html>

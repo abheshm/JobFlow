@@ -52,6 +52,7 @@
                 <td>{{ job.job_role }}</td>
                 <td>{{ job.status }}</td>
                 <td>
+                    <a href="{% url 'edit_job' job.id %}">Edit</a>
                     <a href="{% url 'delete_job' job.id %}">Delete</a>
                 </td>
             </tr>
