@@ -58,5 +58,31 @@
         </tbody>
     </table>
 
+<script>
+document.getElementById('jobForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const data = {
+        company_name: document.getElementById('company_name').value,
+        job_role: document.getElementById('job_role').value,
+        application_date: document.getElementById('application_date').value,
+        status: document.getElementById('status').value,
+        notes: document.getElementById('notes').value
+    };
+    fetch('api/jobs/',{
+        method: 'POST',
+        headers: {
+            'content-Type':'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Job added succesfully!");
+        location.reload();
+    })
+    .catch(error => console.error('Error:' error));
+})
+</script>
 </body>
 </html>
