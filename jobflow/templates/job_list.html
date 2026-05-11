@@ -26,8 +26,8 @@
         </select><br><br>
 
         <textarea id="notes" placeholder="Notes"></textarea><br><br>
-
-        <button type="submit">Add Job</button>
+        <input type="hidden" id="job_id">
+        <button type="submit" id="submitBtn">Add Job</button>
     </form>
 
     <hr>
@@ -73,7 +73,7 @@
         }
         document.getElementById('jobForm').addEventListener('submit', function (e) {
             e.preventDefault();
-
+            const jobId = document.getElementById('job_id').value;
             const data = {
                 company_name: document.getElementById('company_name').value,
                 job_role: document.getElementById('job_role').value,
@@ -81,19 +81,46 @@
                 status: document.getElementById('status').value,
                 notes: document.getElementById('notes').value
             };
-            fetch('api/jobs/', {
-                method: 'POST',
+            const url = jobId
+                ? `/api/jobs/${jobId}/`
+                : '/api/jobs/';
+
+            const method = jobId ? 'PUT' : 'POST';
+
+            fetch(url, {
+
+                method: method,
+
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
+
                 body: JSON.stringify(data)
             })
+
                 .then(response => response.json())
+
                 .then(data => {
-                    alert("Job added succesfully!");
-                    location.reload();
+
+                    if (jobId) {
+
+                        alert("Job updated successfully!");
+
+                    } else {
+
+                        alert("Job added successfully!");
+                    }
+
+                    document.getElementById('jobForm').reset();
+
+                    document.getElementById('job_id').value = '';
+
+                    document.getElementById('submitBtn').innerText = 'Add Job';
+
+                    loadJobs();
                 })
+
                 .catch(error => console.error('Error:', error));
         })
         function loadJobs() {
@@ -116,8 +143,7 @@
                         <td>${job.job_role}</td>
                         <td>${job.status}</td>
                         <td>
-                            <a href="/edit/${job.id}/">Edit</a>
-                            |
+                            <button type="button" onclick="editJob(${job.id})">Edit</button>
                             <button onclick="deleteJob(${job.id})">Delete</button>
                         </td>
                     </tr>
@@ -125,6 +151,33 @@
 
                         tableBody.innerHTML += row;
                     });
+
+                })
+
+                .catch(error => console.error('Error:', error));
+        }
+
+        function editJob(id) {
+
+            fetch(`/api/jobs/${id}/`)
+
+                .then(response => response.json())
+
+                .then(data => {
+
+                    document.getElementById('job_id').value = data.id;
+
+                    document.getElementById('company_name').value = data.company_name;
+
+                    document.getElementById('job_role').value = data.job_role;
+
+                    document.getElementById('application_date').value = data.application_date;
+
+                    document.getElementById('status').value = data.status;
+
+                    document.getElementById('notes').value = data.notes;
+
+                    document.getElementById('submitBtn').innerText = 'Update Job';
 
                 })
 
