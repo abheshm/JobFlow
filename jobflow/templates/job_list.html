@@ -1,10 +1,12 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>JobFlow</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
+
 <body>
 
     <h1>Job Applications</h1>
@@ -15,7 +17,7 @@
         <input type="text" id="company_name" placeholder="Company Name" required><br><br>
         <input type="text" id="job_role" placeholder="Job Role" required><br><br>
         <input type="date" id="application_date" required><br><br>
-        
+
         <select id="status">
             <option value="Applied">Applied</option>
             <option value="Interview">Interview</option>
@@ -41,48 +43,71 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            {% for job in jobs %}
-            <tr>
-                <td>{{ job.company_name }}</td>
-                <td>{{ job.job_role }}</td>
-                <td>{{ job.status }}</td>
-                <td>
-                    <a href="{% url 'edit_job' job.id %}">Edit</a>
-                    <a href="{% url 'delete_job' job.id %}" onclick="return confirm('Are you sure you want to delete')">
-    Delete
-</a>
-                </td>
-            </tr>
-            {% endfor %}
+        <tbody id="jobTableBody">
         </tbody>
     </table>
 
-<script>
-document.getElementById('jobForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+    <script>
+        document.getElementById('jobForm').addEventListener('submit', function (e) {
+            e.preventDefault();
 
-    const data = {
-        company_name: document.getElementById('company_name').value,
-        job_role: document.getElementById('job_role').value,
-        application_date: document.getElementById('application_date').value,
-        status: document.getElementById('status').value,
-        notes: document.getElementById('notes').value
-    };
-    fetch('api/jobs/',{
-        method: 'POST',
-        headers: {
-            'content-Type':'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Job added succesfully!");
-        location.reload();
-    })
-    .catch(error => console.error('Error:' error));
-})
-</script>
+            const data = {
+                company_name: document.getElementById('company_name').value,
+                job_role: document.getElementById('job_role').value,
+                application_date: document.getElementById('application_date').value,
+                status: document.getElementById('status').value,
+                notes: document.getElementById('notes').value
+            };
+            fetch('api/jobs/', {
+                method: 'POST',
+                headers: {
+                    'content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Job added succesfully!");
+                    location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+        })
+        function loadJobs() {
+            fetch('/api/jobs/')
+            .then(response => response.json())
+
+            .then(data => {
+
+                console.log(data);
+
+                const tableBody = document.getElementById('jobTableBody');
+
+                tableBody.innerHTML = '';
+
+                data.forEach(job => {
+
+                    const row = `
+                    <tr>
+                        <td>${job.company_name}</td>
+                        <td>${job.job_role}</td>
+                        <td>${job.status}</td>
+                        <td>
+                            <a href="/edit/${job.id}/">Edit</a>
+                            |
+                            <a href="/delete/${job.id}/">Delete</a>
+                        </td>
+                    </tr>
+                `;
+
+                    tableBody.innerHTML += row;
+                });
+
+            })
+
+            .catch(error => console.error('Error:', error));
+        }
+        loadJobs();
+    </script>
 </body>
+
 </html>
