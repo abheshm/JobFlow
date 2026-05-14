@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Register</title>
+
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+
+</head>
+
+<body>
+
+    <h1>Create Account</h1>
+
+    <form id="registerForm">
+
+        <input type="text" id="username" placeholder="Username" required>
+
+        <br><br>
+
+        <input type="password" id="password" placeholder="Password" required>
+
+        <br><br>
+
+        <button type="submit">Register</button>
+
+    </form>
+
+    <script>
+
+        function getCookie(name) {
+
+            let cookieValue = null;
+
+            if (document.cookie && document.cookie !== '') {
+
+                const cookies = document.cookie.split(';');
+
+                for (let i = 0; i < cookies.length; i++) {
+
+                    const cookie = cookies[i].trim();
+
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+
+                        break;
+                    }
+                }
+            }
+
+            return cookieValue;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+
+            e.preventDefault();
+
+            const data = {
+
+                username: document.getElementById('username').value,
+
+                password: document.getElementById('password').value
+            };
+
+            fetch('/api/register/', {
+
+                method: 'POST',
+
+                headers: {
+
+                    'Content-Type': 'application/json',
+
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+
+                body: JSON.stringify(data)
+            })
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                alert("Registration successful!");
+
+                window.location.href = '/';
+            })
+
+            .catch(error => console.error('Error:', error));
+        });
+
+    </script>
+
+</body>
+
+</html>
